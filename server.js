@@ -11,7 +11,16 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize Firebase Admin
-const serviceAccount = require('./serviceAccountKey.json');
+let serviceAccount;
+
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  // Production: Use environment variable
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} else {
+  // Development: Use local file
+  serviceAccount = require('./serviceAccountKey.json');
+}
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
